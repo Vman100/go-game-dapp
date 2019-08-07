@@ -1,0 +1,20 @@
+{
+  "options": {
+    "solc": {
+      "optimize": true,
+      "optimize-runs": 200
+    }
+  },
+  "app": {},
+  "contracts": [
+    "contracts/**"
+  ],
+  "buildDir": "dist/",
+  "config": "embarkConfig/",
+  "versions": {
+    "web3": "1.2.1",
+    "solc": "0.5.4",
+    "ipfs-api": "17.2.4"
+  },
+  "generationDir": "embarkArtifacts"
+}

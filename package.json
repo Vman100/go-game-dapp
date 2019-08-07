@@ -1,0 +1,25 @@
+{
+  "name": "go-game-dapp",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "embark test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "description": "",
+  "devDependencies": {
+    "solidity-util": "github:willitscale/solidity-util",
+    "embarkjs-connector-web3": "^4.0.0",
+    "solidity-parser-antlr": "^0.4.8"
+  }
+}
