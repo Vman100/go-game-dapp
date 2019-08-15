@@ -11,6 +11,7 @@ import {
   FormControl, 
   FormLabel } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import { addNewGame } from '../apis'
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -46,8 +47,7 @@ function GameSelect(props) {
     showJoinGame: false,
     color: 'white',
     boardSize: '5',
-    GameId: '1',
-    GamesList: [{ GameId: '1'}]
+    GameId: '1'
   });
 
   function handleChange(event, value) {
@@ -69,12 +69,17 @@ function GameSelect(props) {
     const { wallet, GamesList} = props
     const {color, boardSize} = values
     if(values.showNewGame) {
-      let GameId = GamesList ? GamesList[GamesList.length - 1].GameId + 1 : 0
+      let GameId = GamesList ? GamesList[GamesList.length - 1].GameId + 1 : 1
       let gameData = {
+        GameId,
         color,
-        boardSize,
-        GameId
+        boardSize
       }
+      let isWhite = color === 'white' ? true : false
+      debugger
+      //await addNewGame(gameData)
+      
+      
     }
     if(values.showJoinGame) {
       
@@ -135,8 +140,8 @@ function GameSelect(props) {
             </Button>
           </div>)}
           {values.showJoinGame && (<div>
-            {!values.GamesList && (<p>No Game Available, please start new Game</p>)}
-            {values.GamesList && (<div>
+            {!props.GamesList && (<p>No Game Available, please start new Game</p>)}
+            {props.GamesList && (<div>
               <FormControl component="fieldset" className={classes.formControl} >
                 <FormLabel component="legend">Games By Id</FormLabel>
                 <RadioGroup

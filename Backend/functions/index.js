@@ -24,7 +24,7 @@ const prepareData = (data, method) => {
   } else if(method === 'checkUser') {
     params.push('UserName')
   } else if(method === 'addGame') {
-    params.push('GameId')
+    params.push('GameId','color','boardSize')
   }
 
   for (let key in data) {
@@ -91,7 +91,7 @@ const getGamesList = async (req, res) => {
 const addGame = async (req, res) => {
     try {
       const gameData = prepareData(req.body, "addGame")
-      if(gameData.length === 1) {
+      if(gameData.length === 3) {
         delete gameData['missingParams']
         delete gameData['length']
         const game = await gamesSite.getByGameId(admin.database(), gameData.GameId)

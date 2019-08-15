@@ -7,6 +7,7 @@ import {
   SET_PASSWORD,
   SET_BUTTONNAME,
   SET_GAMESLIST,
+  SET_CONTRACT
 } from '../actions'
 
 
@@ -14,6 +15,7 @@ const user = (state = {
   isLoading: false,
   wallet: undefined,
   isWallet: false,
+  contract: undefined,
   email: '',
   password: '',
   DAPP_STORAGE_KEY: 'SIGNTX',
@@ -55,7 +57,12 @@ const user = (state = {
     case SET_GAMESLIST:
       return {
         ...state,
-        GamesList: action.GamesList,
+        GamesList: action.GamesList
+      }
+    case SET_CONTRACT:
+      return {
+        ...state,
+        contract: action.contract
       }
     default:
       return state

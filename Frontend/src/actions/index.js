@@ -4,7 +4,8 @@ export const SET_ISWALLET = 'SET_ISWALLET'
 export const SET_EMAIL = 'SET_EMAIL'
 export const SET_PASSWORD = 'SET_PASSWORD'
 export const SET_BUTTONNAME = 'SET_BUTTONNAME'
-export const SET_GAMESLIST = 'SET_GAMESLIST';
+export const SET_GAMESLIST = 'SET_GAMESLIST'
+export const SET_CONTRACT = 'SET_CONTRACT'
 
 export const setLoading = (bool) => ({
   type: SET_LOADING,
@@ -41,20 +42,7 @@ export const setGamesList = (GamesList) => ({
   GamesList
 })
 
-// export const requestGamesList =  => ({
-//   type: REQUEST_GAMESLIST,
-//   GameId
-// })
-
-// export const receiveGamesList = (json) => ({
-//   type: RECEIVE_GAMESLIST,
-//   posts: json.data.children.map(child => child.data),
-//   receivedAt: Date.now()
-// })
-
-// export const fetchPosts = subreddit => dispatch => {
-//   dispatch(requestPosts(subreddit))
-//   return fetch(`https://www.reddit.com/r/${subreddit}.json`)
-//     .then(response => response.json())
-//     .then(json => dispatch(receivePosts(json)))
-// }
+export const setContract = (contract) => ({
+  type: SET_CONTRACT,
+  contract
+})
