@@ -1,5 +1,5 @@
 pragma solidity 0.5.4;
-pragma experimental ABIEncoderV2;
+//pragma experimental ABIEncoderV2;
 
 import "solidity-util/lib/Strings.sol";
 import "solidity-util/lib/Integers.sol";
@@ -32,7 +32,7 @@ library Utils {
         }
         return address(iaddr);
     }
-    
+
     function contains(string memory _base, string memory _subString) internal pure returns(bool, uint) {
         bytes memory baseBytes = bytes (_base);
         bytes memory subStringBytes = bytes (_subString);
@@ -62,9 +62,9 @@ contract goGameStateChannel {
     using Integers for uint;
     enum State { SETUP, PLAYING, DISPUTE, FINISHED }
     uint public requiredDeposit = 2 * 10 ** 18;
-    
-    uint[] availableBoardSizes = [5, 6 , 7, 8 , 9, 11, 13, 15, 19];
-    
+
+    uint[] availableBoardSizes = [5, 6, 7, 8, 9, 11, 13, 15, 19];
+
     struct Player {
         address payable playerAddress;
         bool isWhite;
@@ -72,7 +72,7 @@ contract goGameStateChannel {
         bool hasSubmited;
         bool isWinner;
     }
-    
+
     struct Channel {
         Player playerA;
         Player playerB;
@@ -84,9 +84,9 @@ contract goGameStateChannel {
         string[2] receivedGameStates;
         State currentState;
     }
-    
-    mapping(uint256 => Channel) public multiChannel;
-    
+
+    mapping(uint256 => Channel) multiChannel;
+
     event StateChanged(uint _gameId, string oldState, string newState);
     event NewGame(uint _gameId, address _player, uint _boardSize, bool _isWhite);
     event GameJoined(uint _gameId, address _player, bool _isWhite);
@@ -94,7 +94,7 @@ contract goGameStateChannel {
     event NewGameStateReceived(uint _gameId, string _receivedGameState, address _player);
     event NewGameStateSaved(uint _gameId, string _newGameState);
     event Transfer(uint _gameId, address _player, uint _amount);
-    
+
     modifier checkState(uint _gameId, State _currentState) {
         string memory errorString;
         if(_currentState == State.SETUP) {
@@ -109,12 +109,13 @@ contract goGameStateChannel {
         require(multiChannel[_gameId].currentState == _currentState, errorString);
         _;
     }
-    
-     modifier isPlayer(uint _gameId) {
-        require(multiChannel[_gameId].playerA.playerAddress == msg.sender || multiChannel[_gameId].playerB.playerAddress == msg.sender, 'caller is not a player of the associated game id');
+
+    modifier isPlayer(uint _gameId) {
+        require(multiChannel[_gameId].playerA.playerAddress == msg.sender ||
+        multiChannel[_gameId].playerB.playerAddress == msg.sender, 'caller is not a player of the associated game id');
         _;
     }
-    
+
     function checkGameState(string memory _gameState, string memory _searchString, uint length) private pure returns(string memory){
         (bool result, uint index) = _gameState.contains(_searchString);
         if(result) {
@@ -122,7 +123,7 @@ contract goGameStateChannel {
         }
         return 'error substring not found';
     }
-    
+
     function checkBoardSize(uint _boardSize) private view returns(bool){
         for(uint i = 0; i < availableBoardSizes.length; i++) {
             if(_boardSize == availableBoardSizes[i]) {
@@ -130,15 +131,15 @@ contract goGameStateChannel {
             }
         }
     }
-    
-    function getGameStates(uint _gameId) public view returns(string[] memory, string[2] memory) {
-        return (multiChannel[_gameId].savedGameStates, multiChannel[_gameId].receivedGameStates);
-    }
-    
+
+    // function getGameStates(uint _gameId) public view returns(string[] memory, string[2] memory) {
+    //     return (multiChannel[_gameId].savedGameStates, multiChannel[_gameId].receivedGameStates);
+    // }
+
     function getAvailableBoardSizes() public view returns(uint[] memory){
         return availableBoardSizes;
     }
-    
+
     function startNewGame(uint _gameId, uint _boardSize, bool _isWhite) public checkState(_gameId, State.SETUP) {
         require(multiChannel[_gameId].playerA.playerAddress == address(0), 'game at given id exists');
         require(checkBoardSize(_boardSize), 'given boardSize is not available');
@@ -149,7 +150,7 @@ contract goGameStateChannel {
         }
         emit NewGame(_gameId, msg.sender, _boardSize, _isWhite);
     }
-    
+
     function joinGame(uint _gameId) public checkState(_gameId, State.SETUP) {
         require(multiChannel[_gameId].playerA.playerAddress != address(0), 'game at given id does not exist');
         require(multiChannel[_gameId].playerA.playerAddress != msg.sender, 'caller must be a different address');
@@ -159,7 +160,7 @@ contract goGameStateChannel {
         }
         emit GameJoined(_gameId, msg.sender, multiChannel[_gameId].playerB.isWhite);
     }
-    
+
     function deposit(uint _gameId) public payable checkState(_gameId, State.SETUP) isPlayer(_gameId) {
         require(msg.value == requiredDeposit, 'deposit must match required amount');
         require(multiChannel[_gameId].escrowAmount + msg.value > multiChannel[_gameId].escrowAmount, 'escrowAmount overflow');
@@ -177,8 +178,9 @@ contract goGameStateChannel {
             emit StateChanged(_gameId, 'SETUP', 'PLAYING');
         }
     }
-    
-    function saveGameState(uint _gameId, string memory _gameState, uint _nonce, uint8 v, bytes32 r, bytes32 s) public checkState(_gameId, State.PLAYING) isPlayer(_gameId) {
+
+    function saveGameState(uint _gameId, string memory _gameState, uint _nonce,
+    uint8 v, bytes32 r, bytes32 s) public checkState(_gameId, State.PLAYING) isPlayer(_gameId) {
         require(Integers.parseInt(checkGameState(_gameState,"gameNonce", _nonce.toString().length())) == _nonce, "signature nonce is invalid");
         require(_nonce > multiChannel[_gameId].nonce, "signature nonce must be greater then current nonce");
         bytes32 messageHash = keccak256(abi.encodePacked(_gameId, _gameState, _nonce, address(this)));
@@ -223,8 +225,9 @@ contract goGameStateChannel {
             }
         }
     }
-    
-    function disputeGameState(uint _gameId, string memory _gameState, uint _newNonce, uint8 v, bytes32 r, bytes32 s) public checkState(_gameId, State.DISPUTE) isPlayer(_gameId) { // takes signature
+
+    function disputeGameState(uint _gameId, string memory _gameState, uint _newNonce,
+    uint8 v, bytes32 r, bytes32 s) public checkState(_gameId, State.DISPUTE) isPlayer(_gameId) { // takes signature
         if(block.number >= multiChannel[_gameId].blockNumber + 21) {
             if(multiChannel[_gameId].playerA.hasSubmited) {
                 delete multiChannel[_gameId].playerA.hasSubmited;
@@ -237,7 +240,7 @@ contract goGameStateChannel {
             emit StateChanged(_gameId, 'DISPUTE', 'FINISHED');
         } else {
             require(block.number < multiChannel[_gameId].blockNumber + 21, "The game state must be submited within dispute period");
-            require(Integers.parseInt(checkGameState(_gameState,"nonce", _newNonce.toString().length())) == _newNonce, "signature nonce is invalid");
+            require(Integers.parseInt(checkGameState(_gameState,"gameNonce", _newNonce.toString().length())) == _newNonce, "signature nonce is invalid");
             require(_newNonce > multiChannel[_gameId].nonce, "signature nonce must be greater then current nonce");
             bytes32 messageHash = keccak256(abi.encodePacked(_gameId, _gameState, _newNonce, address(this)));
             bytes32 messageHash2 = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", messageHash));
@@ -275,7 +278,7 @@ contract goGameStateChannel {
             }
         }
     }
-    
+
     function transfer(uint _gameId) public checkState(_gameId, State.FINISHED) isPlayer(_gameId) {
         if(multiChannel[_gameId].playerA.isWinner) {
             multiChannel[_gameId].playerA.playerAddress.transfer(multiChannel[_gameId].escrowAmount);
