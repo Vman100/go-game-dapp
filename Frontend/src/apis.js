@@ -55,3 +55,31 @@ export const addNewGame = async gameData => {
   console.log('add Game', json)
   return json
 }
+
+export const updateGame = async gameData => {
+  const rawResponse = await fetch(`${config.development.backenUrl}/Games/${gameData.GameId}`, {
+    method: 'PATCH',
+    mode: 'cors',
+    body: JSON.stringify(gameData),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+  const json = await rawResponse.json()
+  console.log('update Game', json)
+  return json
+}
+
+export const addFunds = async address => {
+  const rawResponse = await fetch(`${config.development.backenUrl}/gitter`, {
+    method: 'POST',
+    mode: 'cors',
+    body: JSON.stringify({address}),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+  const json = await rawResponse.json()
+  console.log('add Funds', json)
+  return json
+}

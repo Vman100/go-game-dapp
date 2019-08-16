@@ -7,7 +7,8 @@ import {
   SET_PASSWORD,
   SET_BUTTONNAME,
   SET_GAMESLIST,
-  SET_CONTRACT
+  SET_CONTRACT,
+  SET_GAMEID
 } from '../actions'
 
 
@@ -21,6 +22,7 @@ const user = (state = {
   DAPP_STORAGE_KEY: 'SIGNTX',
   buttonName: 'Sign Up',
   GamesList: undefined,
+  gameId: undefined,
   availableSizes: ['5','6','7','8','9','11','13','15','19']
 }, action) => {
   switch (action.type) {
@@ -63,6 +65,11 @@ const user = (state = {
       return {
         ...state,
         contract: action.contract
+      }
+    case SET_GAMEID:
+      return {
+        ...state,
+        gameId: action.gameId
       }
     default:
       return state

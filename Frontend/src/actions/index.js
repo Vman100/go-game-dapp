@@ -6,6 +6,7 @@ export const SET_PASSWORD = 'SET_PASSWORD'
 export const SET_BUTTONNAME = 'SET_BUTTONNAME'
 export const SET_GAMESLIST = 'SET_GAMESLIST'
 export const SET_CONTRACT = 'SET_CONTRACT'
+export const SET_GAMEID = 'SET_GAMEID'
 
 export const setLoading = (bool) => ({
   type: SET_LOADING,
@@ -45,4 +46,9 @@ export const setGamesList = (GamesList) => ({
 export const setContract = (contract) => ({
   type: SET_CONTRACT,
   contract
+})
+
+export const setGameId = (gameId) => ({
+  type: SET_GAMEID,
+  gameId
 })

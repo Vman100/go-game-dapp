@@ -11,7 +11,10 @@ import {
   FormControl, 
   FormLabel } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import { addNewGame } from '../apis'
+import { addNewGame, updateGame } from '../apis'
+import { setGameId } from '../actions'
+import { startNewGame, joinGame } from '../contractFunctions'
+
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -66,23 +69,36 @@ function GameSelect(props) {
 
   async function handleSubmit(event) {
     event.preventDefault()
-    const { wallet, GamesList} = props
+    const { wallet, GamesList, contract, dispatch } = props
     const {color, boardSize} = values
     if(values.showNewGame) {
-      let GameId = GamesList ? GamesList[GamesList.length - 1].GameId + 1 : 1
-      let gameData = {
-        GameId,
+      const GameId = GamesList ? Number(GamesList[GamesList.length - 1].GameId) + 1 : 1
+      const isWhite = color === 'white' ? true : false
+      const gameData = {
+        GameId: GameId.toString(),
         color,
-        boardSize
+        boardSize,
+        isWhite,
+        firstPlayer: wallet.address
       }
-      let isWhite = color === 'white' ? true : false
-      debugger
-      //await addNewGame(gameData)
-      
-      
+      await addNewGame(gameData)
+      await startNewGame(gameData, contract)
+      dispatch(setGameId(GameId))
     }
     if(values.showJoinGame) {
-      
+      const game = GamesList.filter(game => {return game.GameId === values.GameId})[0]
+      debugger
+      if(game.firstPlayer !== wallet.address && game.secondPlayer === undefined) {
+        const gameData = {
+          GameId: values.GameId,
+          secondPlayer: wallet.address,
+          method: 'joinGame',
+          requiredParams: 2
+        }
+        await updateGame(gameData)
+        await joinGame(gameData.GameId, contract)
+      }
+      dispatch(setGameId(Number(values.GameId)))
     }
   }
 
@@ -150,7 +166,7 @@ function GameSelect(props) {
                   className={classes.group}
                   value={values.GameId}
                   onChange={handleChange}> 
-                  {values.GamesList.map(key => 
+                  {props.GamesList.map(key => 
                     <FormControlLabel key={key.GameId} value={key.GameId} control={<Radio />} label={key.GameId} />
                   )}
                 </RadioGroup>
@@ -173,8 +189,9 @@ function GameSelect(props) {
 }
 
 const mapStateToProps = state => {
-  const { wallet, GamesList, availableSizes } = state.user
+  const { wallet, GamesList, availableSizes, contract } = state.user
   return {
+    contract,
     wallet,
     GamesList,
     availableSizes

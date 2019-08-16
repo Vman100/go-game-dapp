@@ -6,6 +6,8 @@ import GameSelect from './components/GameSelect.js'
 import { getGamesList } from './apis';
 import _ from 'lodash'
 
+
+
 class App extends React.Component {
 
   async componentDidMount() {
@@ -23,20 +25,22 @@ class App extends React.Component {
   }
 
   render() {
-    const { wallet } = this.props
+    const { wallet, gameId } = this.props
     return (
       <div>
         {!wallet && (<SignUpOrLogin />)}
-        {wallet && (<GameSelect />)}
+        {wallet && !gameId && (<GameSelect />)}
+        {wallet && gameId && (<h3>{wallet.address} and {gameId}</h3>)}
       </div>
     )
   }
 }
 
 const mapStateToProps = state => {
-  const { wallet, buttonName, DAPP_STORAGE_KEY } = state.user
+  const { wallet, gameId, buttonName, DAPP_STORAGE_KEY } = state.user
   return {
     wallet,
+    gameId,
     buttonName,
     DAPP_STORAGE_KEY
   }

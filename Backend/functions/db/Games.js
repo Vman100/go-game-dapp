@@ -42,3 +42,16 @@ exports.addNewGame = async (database, gameData) => {
     return err
   }
 }
+
+exports.updateGame = async (database, gamekey, oldGameData, newGameData) => {
+  try {
+    const updates = {}
+    const path = "Games/" + gamekey
+    updates[path] = { ...oldGameData, ...newGameData }
+    console.log(updates)
+    await database.ref().update(updates);
+    return gamekey
+  } catch(err) {
+    return err
+  }
+}
