@@ -2,7 +2,7 @@ import config from './config.js'
 import _ from 'lodash'
 
 export const getByUserName = async (UserName) => {
-  const url = new URL(`${config.development.backenUrl}/Users`)
+  const url = new URL(`${config.production.backenUrl}/Users`)
   url.search = new URLSearchParams({UserName})
   const response = await fetch(url, {
     method: 'get',
@@ -14,7 +14,7 @@ export const getByUserName = async (UserName) => {
 }
 
 export const getGamesList = async () => {
-  const response = await fetch(`${config.development.backenUrl}/Games`, {
+  const response = await fetch(`${config.production.backenUrl}/Games`, {
     method: 'get',
     mode: 'cors',
   })
@@ -29,7 +29,7 @@ export const getGamesList = async () => {
 }
 
 export const addNewUser = async userData => {
-  const rawResponse = await fetch(`${config.development.backenUrl}/Users`, {
+  const rawResponse = await fetch(`${config.production.backenUrl}/Users`, {
     method: 'POST',
     mode: 'cors',
     body: JSON.stringify(userData),
@@ -43,7 +43,7 @@ export const addNewUser = async userData => {
 }
 
 export const addNewGame = async gameData => {
-  const rawResponse = await fetch(`${config.development.backenUrl}/Games`, {
+  const rawResponse = await fetch(`${config.production.backenUrl}/Games`, {
     method: 'POST',
     mode: 'cors',
     body: JSON.stringify(gameData),
@@ -57,7 +57,7 @@ export const addNewGame = async gameData => {
 }
 
 export const updateGame = async gameData => {
-  const rawResponse = await fetch(`${config.development.backenUrl}/Games/${gameData.GameId}`, {
+  const rawResponse = await fetch(`${config.production.backenUrl}/Games/${gameData.GameId}`, {
     method: 'PATCH',
     mode: 'cors',
     body: JSON.stringify(gameData),
@@ -71,7 +71,7 @@ export const updateGame = async gameData => {
 }
 
 export const addFunds = async address => {
-  const rawResponse = await fetch(`${config.development.backenUrl}/gitter`, {
+  const rawResponse = await fetch(`${config.production.backenUrl}/gitter`, {
     method: 'POST',
     mode: 'cors',
     body: JSON.stringify({address}),

@@ -13,7 +13,7 @@ import {
 
 
 const user = (state = {
-  isLoading: false,
+  isLoading: true,
   wallet: undefined,
   isWallet: false,
   contract: undefined,

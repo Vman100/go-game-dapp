@@ -1,12 +1,11 @@
 import React from 'react';
 import {connect} from 'react-redux'
-import {setIsWallet, setButtonName, setGamesList } from './actions'
+import {setIsWallet, setButtonName, setGamesList, setLoading } from './actions'
 import SignUpOrLogin from './components/SignUpOrLogin.js'
 import GameSelect from './components/GameSelect.js'
 import { getGamesList } from './apis';
 import _ from 'lodash'
-
-
+import Spiner from './Spiner.js'
 
 class App extends React.Component {
 
@@ -21,14 +20,16 @@ class App extends React.Component {
     const GamesList = await getGamesList()
     if(!_.isNull(GamesList)) {
       dispatch(setGamesList(GamesList))
-    } 
+    }
+    dispatch(setLoading(false))
   }
 
   render() {
-    const { wallet, gameId } = this.props
+    const { wallet, gameId, isLoading } = this.props
     return (
       <div>
-        {!wallet && (<SignUpOrLogin />)}
+        {isLoading && (<Spiner></Spiner>)}
+        {!isLoading && !wallet && (<SignUpOrLogin />)}
         {wallet && !gameId && (<GameSelect />)}
         {wallet && gameId && (<h3>{wallet.address} and {gameId}</h3>)}
       </div>
@@ -37,8 +38,9 @@ class App extends React.Component {
 }
 
 const mapStateToProps = state => {
-  const { wallet, gameId, buttonName, DAPP_STORAGE_KEY } = state.user
+  const { isLoading, wallet, gameId, buttonName, DAPP_STORAGE_KEY } = state.user
   return {
+    isLoading,
     wallet,
     gameId,
     buttonName,
