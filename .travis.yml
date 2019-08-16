@@ -1,6 +1,7 @@
 language: node_js
 before_install:
-  npm install -g embark
+  npm install -g gulp
+  npm install -g embark@next
 node_js:
 - node
 - 'lts/*'

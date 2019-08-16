@@ -6,7 +6,7 @@ const cors = require('cors')
 const express = require('express')
 const usersSite = require('./db/Users.js')
 const gamesSite = require('./db/Games.js')
-const serviceAccount = require("../go-game-dapp-firebase-adminsdk.json");
+const serviceAccount = require("./go-game-dapp-firebase-adminsdk.json");
 
 const usersEndpoint = express()
 const gamesEndpoint = express()
@@ -15,10 +15,9 @@ usersEndpoint.use(cors({ origin: true }));
 gamesEndpoint.use(cors({ origin: true }));
 gitterEndpoint.use(cors({ origin: true }));
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://go-game-dapp.firebaseio.com"
-});
+const adminConfig = JSON.parse(process.env.FIREBASE_CONFIG);
+adminConfig.credential = admin.credential.cert(serviceAccount);
+admin.initializeApp(adminConfig);
 
 const prepareData = (data, method) => {
   let params = []
@@ -154,7 +153,7 @@ const addFunds = async (req, res) => {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'Authorization': `Bearer ${process.env.gitterApiKey}`
+          'Authorization': `Bearer ${functions.config.gitter.key}`
         },
       })
       return res.status(200).json(data)

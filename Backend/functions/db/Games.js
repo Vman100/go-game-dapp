@@ -2,8 +2,6 @@ exports.getByGameId = async (database, GameId) => {
   try {
     const response = await database.ref().child('Games')
     .orderByChild('GameId').equalTo(GameId).once("value")
-    console.log('exists', response.exists())
-    console.log('value', response.val())
     return {exists: response.exists(), value: response.val() };
   } catch(err) {
     return err
@@ -13,7 +11,6 @@ exports.getByGameId = async (database, GameId) => {
 exports.getGamesList = async (database) => {
   try {
     const response = await database.ref('Games').once('value')
-    console.log('response', response.val())
     return response.val();
   } catch(err) {
     return err
@@ -23,7 +20,6 @@ exports.getGamesList = async (database) => {
 exports.getGameByKey = async (database, key) => {
   try {
     const response = await database.ref('Games/' + key).once('value')
-    console.log('response', {[key]: response.val()})
     return {[key]: response.val()};
   } catch (err) {
     return err
@@ -48,7 +44,6 @@ exports.updateGame = async (database, gamekey, oldGameData, newGameData) => {
     const updates = {}
     const path = "Games/" + gamekey
     updates[path] = { ...oldGameData, ...newGameData }
-    console.log(updates)
     await database.ref().update(updates);
     return gamekey
   } catch(err) {
