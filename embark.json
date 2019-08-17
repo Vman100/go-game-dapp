@@ -5,7 +5,11 @@
       "optimize-runs": 200
     }
   },
-  "app": {},
+  "app": {
+    "js/app.js": ["Frontend/src/app.js"],
+    "index.html": "Frontend/public/index.html",
+    "images/": ["Frontend/**"]
+  },
   "contracts": [
     "contracts/**"
   ],

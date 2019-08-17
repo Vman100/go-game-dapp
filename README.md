@@ -1,8 +1,31 @@
 # Go Game Dapp
 
+The Use Case is to resolve trust issues with a third party holding the funds of the players and acting as the game's referee for cases of cheating along witth handling disputes and tranfers of funds.
+
+The blockchain is used to control and monitor the game state as a referee for the game.
+
 The contact uses combination of my library and the solidity-utils library authored by James Lockhart.
 
-## functions
+## getting started 
+
+1. Clone this repository `git clone https://github.com/Vman100/go-game-dapp`
+2. change to desired folder
+3. run the command `npm install`
+4. navigate to Backend/function folder and run the command `npm install`
+5. at current location run the command `npm serve` or `npm run serve`
+6. on different terminal run the command `npm start-react` or `npm run start-react`
+7. open browser to specified port, typically `localhost:3000`
+
+## Backend endpoints
+there are three endpoints available on the backend, two of which connect to the database with third endpoint used for funding via the gitter api.
+
+### Users
+This endpoint is used for storing and retrieving user login info such email as username and passwordhash.
+
+### Games
+This endpoint is used for storing and retrieving game data such as the user's wallet address and other game related info for use off-chain.
+
+## constract functions
 
 There are a total of ten public functions four of which are getter functions. All public functions that accepts at least one argument has uint gameId set as the first argument and uses the gameId argument to select the state channel. 
 
@@ -39,5 +62,6 @@ Network: kovan
 
 deployed Tx: https://kovan.etherscan.io/tx/0x2f98a4298e69a68dd945c2b42b535f781d1c30a7abb876836582e554700883e4
 
+hosted at: https://go-game-dapp.web.app and https://go-game-dapp.firebaseapp.com
 ---
 Created By: Vedran Tepavcevic
