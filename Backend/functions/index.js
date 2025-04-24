@@ -20,6 +20,9 @@ adminConfig.credential = admin.credential.cert(serviceAccount);
 admin.initializeApp(adminConfig);
 
 const prepareData = (data, method) => {
+  if (typeof data !== 'object' || Array.isArray(data)) {
+    throw new Error("Invalid input: expected an object");
+  }
   let params = []
   if(method === 'addUser') {
     params.push('UserName', 'passwordHash')
@@ -65,6 +68,9 @@ const getByUserName = async (req, res) => {
 
 const addUser = async (req, res) => {
     try {
+      if (typeof req.body !== 'object' || Array.isArray(req.body)) {
+        return res.status(400).json("Invalid input: expected an object");
+      }
       const userData = prepareData(req.body, "addUser")
       if(userData.length === 2) {
         delete userData['missingParams']
